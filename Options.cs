@@ -8,32 +8,56 @@ using CommandLine.Text;
 
 namespace OnionScanner {
     class Options {
-        [Option('i', "input", Required = false, HelpText = "File to read URLS from")]
+        [Option('i', "input", Required = false, HelpText = "File to read URLs from")]
         public string InputFile {
             get;
             set;
         }
 
-        [Option('o', "output", Required = true, HelpText = "File to write good URLs to")]
+        [Option('o', "output", Required = true, HelpText = "Directory to write files to")]
         public string OutputFile {
             get;
             set;
         }
 
-        [Option('v', "verbose", Required = false, DefaultValue = false, HelpText = "File to read URLS from")]
+        [Option('v', "verbose", Required = false, DefaultValue = false, HelpText = "File to read URLs from")]
         public bool Verbose {
             get;
             set;
         }
 
-        [Option('u', "proxyurl", Required = true, HelpText = "The URL for the HTTP Proxy to get to TOR [use privoxy]")]
+        [Option('u', "proxyurl", Required = false, DefaultValue = "127.0.0.1", HelpText = "The URL for the HTTP Proxy to get to TOR [use privoxy]")]
         public string ProxyURL {
             get;
             set;
         }
 
-        [Option('p', "proxyport", Required = true, HelpText = "The port number for the HTTP Proxy to get to TOR [use privoxy]")]
+        [Option('p', "proxyport", Required = false, DefaultValue = (int)8118, HelpText = "The port number for the HTTP Proxy to get to TOR [use privoxy]")]
         public int ProxyPort {
+            get;
+            set;
+        }
+
+        [Option('s', "save", Required = false, DefaultValue = false, HelpText = "If set, saves bad and seized links as well")]
+        public bool Save {
+            get;
+            set;
+        }
+
+        [Option('d', "d", Required = false, DefaultValue = false, HelpText = "Show site title with saved URLs [Not implemented]")]
+        public bool Description {
+            get;
+            set;
+        }
+
+        [Option('a', "agent", Required = false, DefaultValue = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.4) Gecko/20060508 Firefox/1.5.0.4", HelpText = "User-Agent to emulate")]
+        public string Agent {
+            get;
+            set;
+        }
+
+        [Option('c', "cores", Required = false, DefaultValue = (int)1, HelpText = "Number of cores to use (really helps speed things up) [Not implemented]")]
+        public int Cores {
             get;
             set;
         }

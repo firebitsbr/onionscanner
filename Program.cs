@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define DEBUG
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,16 +22,20 @@ namespace OnionScanner {
         static List<string> rawLinks;
  
         static void Main(string[] args) {
-            seizedSites = new List<string>();
-            removedSites = new List<string>();
-            goodSites = new List<string>();
-            rawLinks = new List<string>();
-
-            int count = 0;
-
             options = new Options();
             if(CommandLine.Parser.Default.ParseArguments(args, options)) {
 
+                goodSites = new List<string>();
+                rawLinks = new List<string>();
+
+                if(options.Save) {
+                    seizedSites = new List<string>();
+                    removedSites = new List<string>();
+                }
+
+#if DEBUG
+                int count = 0;
+#endif
                 if(!string.IsNullOrEmpty(options.InputFile)) {
                     ScanFile(options.InputFile);
                 } else {
@@ -38,24 +43,28 @@ namespace OnionScanner {
 
                     foreach(string url in rawLinks) {
                         ScanURL(url);
-                        count++;
 #if DEBUG
+                        count++;
                         if(count > 2) {
                             break;
                         }
 #endif
                     }
                 }
-                WriteFile();
-                if(options.Verbose) {
-                    Console.WriteLine("Done!");
-                    System.Threading.Thread.Sleep(5000);
-                    System.Environment.Exit(1);
-                }
+                if(goodSites.Count > 0) {
+                    WriteFile();
+                }            
             }
 
-            Console.WriteLine("Done");
+            Done();
 
+        }
+
+        //Tell the user that we're done, wait, then close the program
+        static void Done() {
+            Console.WriteLine("Done");
+            System.Threading.Thread.Sleep(5000);
+            System.Environment.Exit(1);
         }
 
         //Scans URLs from file
@@ -104,7 +113,9 @@ namespace OnionScanner {
                             if(options.Verbose) {
                                 Console.WriteLine("Site Seized: " + url);
                             }
-                            seizedSites.Add(url);
+                            if(options.Save) {
+                                seizedSites.Add(url);
+                            }
                         } else {
                             //Page is still alive
                             if(options.Verbose) {
@@ -112,19 +123,23 @@ namespace OnionScanner {
                             }
                             goodSites.Add(url);
                         }
-                    } else {
+                    } else {//Site did not return a 200 status...must be bad
                         if(options.Verbose) {
                             Console.WriteLine("Site Bad: " + url);
                         }
-                        removedSites.Add(url);
+                        if(options.Save) {
+                            removedSites.Add(url);
+                        }
                     }
                     response.Close();
                     return;
-                } catch(System.Net.WebException e) {
+                } catch(System.Net.WebException e) { //Site returned a 5** status...must be bad
                     if(options.Verbose) {
                         Console.WriteLine("Site Bad: " + url);
                     }
-                    removedSites.Add(url);
+                    if(options.Save) {
+                        removedSites.Add(url);
+                    }
                 }
             }
         }
@@ -134,7 +149,7 @@ namespace OnionScanner {
             string yatdurl = "http://bdpuqvsqmphctrcs.onion/noscript.html";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(yatdurl);
-            request.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.4) Gecko/20060508 Firefox/1.5.0.4";
+            request.UserAgent = @options.Agent;
             WebProxy myproxy = new WebProxy(options.ProxyURL, options.ProxyPort);
             myproxy.BypassProxyOnLocal = false;
             request.Proxy = myproxy;
@@ -152,7 +167,6 @@ namespace OnionScanner {
                 doc.LoadHtml(html);
 
                 foreach(HtmlNode node in doc.DocumentNode.SelectNodes("//table[@id='example_noscript']/tbody/tr/td[2]/a")) {
-                    Console.WriteLine(node.InnerHtml);
                     string link = node.Attributes["href"].Value;
                     rawLinks.Add(link);
                     if(options.Verbose) {
@@ -175,9 +189,11 @@ namespace OnionScanner {
 
         //Write links to files
         static void WriteFile() {
-            StreamWriter goodlinks = new StreamWriter(options.OutputFile);
-            StreamWriter badlinks = new StreamWriter(options.OutputFile + "_bad");
-            StreamWriter seizedlinks = new StreamWriter(options.OutputFile + "_seized");
+            StreamWriter goodlinks = new StreamWriter(options.OutputFile+"links_good.txt");
+
+            StreamWriter badlinks = new StreamWriter(options.OutputFile + "links_bad.txt");
+            StreamWriter seizedlinks = new StreamWriter(options.OutputFile + "links_seized.txt");
+            
 
             if(options.Verbose) {
                 Console.WriteLine("Writing good links to file");
@@ -188,23 +204,26 @@ namespace OnionScanner {
             }
             goodlinks.Close();
 
-            if(options.Verbose) {
-                Console.WriteLine("Writing bad links to file");
+            if(options.Save) {
+                if(options.Verbose) {
+                    Console.WriteLine("Writing bad links to file");
+                }
+
+                foreach(string url in removedSites) {
+                    badlinks.WriteLine(url);
+                }
+                badlinks.Close();
+
+                if(options.Verbose) {
+                    Console.WriteLine("Writing seized links to file");
+                }
+
+                foreach(string url in seizedSites) {
+                    seizedlinks.WriteLine(url);
+                }
+                seizedlinks.Close();
             }
 
-            foreach(string url in removedSites) {
-                badlinks.WriteLine(url);
-            }
-            badlinks.Close();
-
-            if(options.Verbose) {
-                Console.WriteLine("Writing seized links to file");
-            }
-
-            foreach(string url in seizedSites) {
-                seizedlinks.WriteLine(url);
-            }
-            seizedlinks.Close();
             return;
         }
     }
