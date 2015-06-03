@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CommandLine;
+﻿using CommandLine;
 using CommandLine.Text;
 
 namespace OnionScanner {
@@ -44,7 +39,7 @@ namespace OnionScanner {
             set;
         }
 
-        [Option('d', "d", Required = false, DefaultValue = false, HelpText = "Show site title with saved URLs [Not implemented]")]
+        [Option('d', "desc", Required = false, DefaultValue = false, HelpText = "Show site title with saved URLs [Not implemented]")]
         public bool Description {
             get;
             set;
