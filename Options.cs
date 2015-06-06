@@ -39,7 +39,7 @@ namespace OnionScanner {
             set;
         }
 
-        [Option('d', "desc", Required = false, DefaultValue = false, HelpText = "Show site title with saved URLs [Not implemented]")]
+        [Option('d', "desc", Required = false, DefaultValue = false, HelpText = "Show site title with saved good URLs")]
         public bool Description {
             get;
             set;

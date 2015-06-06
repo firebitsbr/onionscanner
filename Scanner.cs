@@ -86,7 +86,18 @@ namespace OnionScanner {
                             if(options.Verbose) {
                                 Console.WriteLine("Site Good: " + url);
                             }
-                            goodSites.Add(url);
+
+                            if(options.Description) {
+                                HtmlDocument doc = new HtmlDocument();
+                                doc.LoadHtml(html);
+
+                                HtmlNodeCollection titlenode = doc.DocumentNode.SelectNodes("//title");
+                                HtmlNode title = titlenode[0];
+                                string t = title.InnerText;
+                                goodSites.Add(t + " - " + url);
+                            } else {
+                                goodSites.Add(url);
+                            }
                         }
                     } else {//Site did not return a 200 status...must be bad
                         if(options.Verbose) {
