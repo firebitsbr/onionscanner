@@ -2,14 +2,19 @@ Onion Scanner
 =============
 **Created:** 2015-06-01<br>
 **Author:** Darkvengance<br>
-**Version:** 1.0<br>
-**Updated:** 2015-06-02<br>
+**Version:** 1.4<br>
+**Updated:** 2015-06-05<br>
 
 #Purpose
 Onion Scanner is a simple TOR Domain scanner.  It has the ability to
 scan .onion domains from a list (with one domain per line) or,
 if no list is provided, it will scan all the links provided by
 Yet Another Tor Directory (YATD).
+
+If you wish to can visit <a href="http://bdpuqvsqmphctrcs.onion/">YATD</a>
+yourself or you can use <a href="http://hss3uro2hsxfogfq.onion/">notEvil</a> which is a DarkNet search engine.
+Keep in mind that if you use these they will not neccesarily give you
+active, working links.
 
 #Options
 
@@ -21,9 +26,9 @@ Yet Another Tor Directory (YATD).
 <tr><td>u</td><td>proxyurl</td><td>string</td><td>No</td><td>The URL for the HTTP Proxy to get to TOR [use privoxy]</td></tr>
 <tr><td>p</td><td>proxyport</td><td>int</td><td>No</td><td>The port number for the HTTP Proxy to get to TOR [use privoxy]</td></tr>
 <tr><td>s</td><td>save</td><td>bool</td><td>No</td><td>If set saves bad and seized links as well</td></tr>
-<tr><td>d</td><td>desc</td><td>bool</td><td>No</td><td>If set saves site title with URLs [Not implemented]</td></tr>
+<tr><td>d</td><td>desc</td><td>bool</td><td>No</td><td>If set saves site title with URLs</td></tr>
 <tr><td>a</td><td>agent</td><td>string</td><td>No</td><td>The User-Agent to emulate</td></tr>
-<tr><td>c</td><td>cores</td><td>int</td><td>No</td><td>Number of cores to use (really helps speed things up) [Not implemented]</td></tr>
+<tr><td>n</td><td>numlinks</td><td>int</td><td>No</td><td>Number of links to scan [0=all]</td></tr>
 </table>
 
 #Setup
