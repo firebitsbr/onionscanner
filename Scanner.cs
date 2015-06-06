@@ -29,6 +29,7 @@ namespace OnionScanner {
         //Scans URLs from file
         public void ScanFile(string filename) {
             string line;
+            int count = 0;
 
             if(options.Verbose) {
                 Console.WriteLine("Opening File: " + filename);
@@ -43,6 +44,12 @@ namespace OnionScanner {
             StreamReader file = new StreamReader(filename);
             while((line = file.ReadLine()) != null) {
                 ScanURL(line);
+                if(options.NumLinks > 0) {
+                    count++;
+                    if(count >= options.NumLinks) {
+                        break;
+                    }
+                }
             }
             file.Close();
         }
@@ -105,6 +112,7 @@ namespace OnionScanner {
         //Gets links from YATD and scans them
         public void ScanYATD() {
             string yatdurl = "http://bdpuqvsqmphctrcs.onion/noscript.html";
+            int count = 0;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(yatdurl);
             request.UserAgent = @options.Agent;
@@ -129,6 +137,12 @@ namespace OnionScanner {
                     rawLinks.Add(link);
                     if(options.Verbose) {
                         Console.WriteLine("Found Link: " + link);
+                    }
+                    if(options.NumLinks > 0) {
+                        count++;
+                        if(count >= options.NumLinks) {
+                            break;
+                        }
                     }
                 }
 

@@ -51,8 +51,8 @@ namespace OnionScanner {
             set;
         }
 
-        [Option('c', "cores", Required = false, DefaultValue = (int)1, HelpText = "Number of cores to use (really helps speed things up) [Not implemented]")]
-        public int Cores {
+        [Option('n', "numlinks", Required = false, DefaultValue = (int)0, HelpText = "Number of links to scan [setting to 0 will scan all found links]")]
+        public int NumLinks {
             get;
             set;
         }
