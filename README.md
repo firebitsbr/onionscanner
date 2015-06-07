@@ -2,7 +2,7 @@ Onion Scanner
 =============
 **Created:** 2015-06-01<br>
 **Author:** Darkvengance<br>
-**Version:** 1.4<br>
+**Version:** 1.8<br>
 **Updated:** 2015-06-05<br>
 
 #Purpose
