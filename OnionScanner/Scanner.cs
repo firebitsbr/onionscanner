@@ -122,6 +122,10 @@ namespace OnionScanner {
 
         //Gets links from YATD and scans them
         public void ScanYATD() {
+            if(options.Verbose) {
+                Console.WriteLine("Scanning YATD...");
+            }
+
             string yatdurl = "http://bdpuqvsqmphctrcs.onion/noscript.html";
             int count = 0;
 
